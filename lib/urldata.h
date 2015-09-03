@@ -358,9 +358,15 @@ struct ssl_config_data {
   bool certinfo;         /* gather lots of certificate info */
   bool falsestart;
 
-#ifdef USE_TLS_SRP
+  char *client_cert;
+  char *client_key;
+  char *client_key_pwd;
+
+  char *pinned_pub_key;
+
   char *username; /* TLS username (for, e.g., SRP) */
   char *password; /* TLS password (for, e.g., SRP) */
+#ifdef USE_TLS_SRP
   enum CURL_TLSAUTH authtype; /* TLS authentication type (default SRP) */
 #endif
 };

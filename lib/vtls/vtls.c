@@ -101,7 +101,13 @@ Curl_ssl_config_matches(struct ssl_config_data* data,
      safe_strequal(data->CAfile, needle->CAfile) &&
      safe_strequal(data->random_file, needle->random_file) &&
      safe_strequal(data->egdsocket, needle->egdsocket) &&
-     safe_strequal(data->cipher_list, needle->cipher_list))
+     safe_strequal(data->cipher_list, needle->cipher_list) &&
+     safe_strequal(data->client_cert, needle->client_cert) &&
+     safe_strequal(data->client_key, needle->client_key) &&
+     safe_strequal(data->client_key_pwd, needle->client_key_pwd) &&
+     safe_strequal(data->pinned_pub_key, needle->pinned_pub_key) &&
+     safe_strequal(data->username, needle->username) &&
+     safe_strequal(data->password, needle->password))
     return TRUE;
 
   return FALSE;
@@ -156,6 +162,54 @@ Curl_clone_ssl_config(struct ssl_config_data *source,
   else
     dest->random_file = NULL;
 
+  if(source->client_cert) {
+    dest->client_cert = strdup(source->client_cert);
+    if(!dest->client_cert)
+      return FALSE;
+  }
+  else
+    dest->client_cert = NULL;
+
+  if(source->client_key) {
+    dest->client_key = strdup(source->client_key);
+    if(!dest->client_key)
+      return FALSE;
+  }
+  else
+    dest->client_key = NULL;
+
+  if(source->client_key_pwd) {
+    dest->client_key_pwd = strdup(source->client_key_pwd);
+    if(!dest->client_key_pwd)
+      return FALSE;
+  }
+  else
+    dest->client_key_pwd = NULL;
+
+  if(source->pinned_pub_key) {
+    dest->pinned_pub_key = strdup(source->pinned_pub_key);
+    if(!dest->pinned_pub_key)
+      return FALSE;
+  }
+  else
+    dest->pinned_pub_key = NULL;
+
+  if(source->username) {
+    dest->username = strdup(source->username);
+    if(!dest->username)
+      return FALSE;
+  }
+  else
+    dest->username = NULL;
+
+  if(source->password) {
+    dest->password = strdup(source->password);
+    if(!dest->password)
+      return FALSE;
+  }
+  else
+    dest->password = NULL;
+
   return TRUE;
 }
 
@@ -166,6 +220,12 @@ void Curl_free_ssl_config(struct ssl_config_data* sslc)
   Curl_safefree(sslc->cipher_list);
   Curl_safefree(sslc->egdsocket);
   Curl_safefree(sslc->random_file);
+  Curl_safefree(sslc->client_cert);
+  Curl_safefree(sslc->client_key);
+  Curl_safefree(sslc->client_key_pwd);
+  Curl_safefree(sslc->pinned_pub_key);
+  Curl_safefree(sslc->username);
+  Curl_safefree(sslc->password);
 }
 
 
