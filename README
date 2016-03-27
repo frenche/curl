@@ -4,7 +4,7 @@
                             | (__| |_| |  _ <| |___
                              \___|\___/|_| \_\_____|
 
-README
+README - new feature - hmm, breaking old stuff...
 
   Curl is a command line tool for transferring data specified with URL
   syntax. Find out how to use curl by reading the curl.1 man page or the
