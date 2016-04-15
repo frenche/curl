@@ -5549,7 +5549,7 @@ static CURLcode create_conn(struct SessionHandle *data,
 
 #ifndef CURL_DISABLE_PROXY
   /*************************************************************
-   * xxExtract the user and password from the authentication string
+   * Extract the user and password from the authentication string
    *************************************************************/
   if(conn->bits.proxy) {
     result = parse_proxy_auth(data, conn);
