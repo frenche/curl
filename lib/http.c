@@ -799,6 +799,21 @@ CURLcode Curl_http_input_auth(struct connectdata *conn, bool proxy,
             /* we received a GSS auth token and we dealt with it fine */
             negdata->state = GSS_AUTHRECV;
           }
+          else if(negdata->state == GSS_AUTHNONE) {
+            /* We haven't started Negotiate yet and we failed to generate a
+             * token, let's see if we can try another authentication method.
+             * Note: 'authp->avail' was cleared at pickoneauth(), so we copy
+             * it from '*availp' */
+            authp->avail = *availp & ~CURLAUTH_NEGOTIATE;
+            if(pickoneauth(authp)) {
+              DEBUGASSERT(!data->req.newurl);
+              data->req.newurl = strdup(data->change.url);
+              if(!data->req.newurl)
+                return CURLE_OUT_OF_MEMORY;
+            }
+            else
+              data->state.authproblem = TRUE;
+          }
           else
             data->state.authproblem = TRUE;
         }
