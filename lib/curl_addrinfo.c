@@ -476,6 +476,7 @@ Curl_addrinfo *Curl_str2addr(char *address, int port)
  * Given a path to a Unix domain socket, return a newly allocated Curl_addrinfo
  * struct initialized with this path.
  */
+#include <stddef.h>
 Curl_addrinfo *Curl_unix2addr(const char *path)
 {
   Curl_addrinfo *ai;
@@ -499,10 +500,12 @@ Curl_addrinfo *Curl_unix2addr(const char *path)
 
   ai->ai_family = AF_UNIX;
   ai->ai_socktype = SOCK_STREAM; /* assume reliable transport for HTTP */
-  ai->ai_addrlen = (curl_socklen_t) sizeof(struct sockaddr_un);
+  ai->ai_addrlen = (curl_socklen_t) offsetof(struct sockaddr_un, sun_path)
+                                    + path_len +1;
   sa_un = (void *) ai->ai_addr;
   sa_un->sun_family = AF_UNIX;
-  memcpy(sa_un->sun_path, path, path_len + 1); /* copy NUL byte */
+  sa_un->sun_path[0] = '\0'; // abstract
+  memcpy(sa_un->sun_path +1, path, path_len);
   return ai;
 }
 #endif
