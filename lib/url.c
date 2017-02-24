@@ -6252,6 +6252,17 @@ static CURLcode create_conn(struct Curl_easy *data,
     }
   }
 
+#ifdef USE_UNIX_SOCKETS
+  if(data->set.str[STRING_UNIX_SOCKET_PATH]) {
+    conn->unix_domain_socket = strdup(data->set.str[STRING_UNIX_SOCKET_PATH]);
+    if(conn->unix_domain_socket == NULL) {
+      result = CURLE_OUT_OF_MEMORY;
+      goto out;
+    }
+    conn->abstract_unix_socket = data->set.abstract_unix_socket;
+  }
+#endif
+
 #ifndef CURL_DISABLE_PROXY
   /*************************************************************
    * Extract the user and password from the authentication string
@@ -6304,21 +6315,6 @@ static CURLcode create_conn(struct Curl_easy *data,
 #endif /* CURL_DISABLE_HTTP */
 
   Curl_safefree(no_proxy);
-
-#ifdef USE_UNIX_SOCKETS
-  if(data->set.str[STRING_UNIX_SOCKET_PATH]) {
-    if(proxy) {
-      free(proxy); /* Unix domain sockets cannot be proxied, so disable it */
-      proxy = NULL;
-    }
-    conn->unix_domain_socket = strdup(data->set.str[STRING_UNIX_SOCKET_PATH]);
-    if(conn->unix_domain_socket == NULL) {
-      result = CURLE_OUT_OF_MEMORY;
-      goto out;
-    }
-    conn->abstract_unix_socket = data->set.abstract_unix_socket;
-  }
-#endif
 
   if(proxy && (!*proxy || (conn->handler->flags & PROTOPT_NONETWORK))) {
     free(proxy);  /* Don't bother with an empty proxy string or if the
