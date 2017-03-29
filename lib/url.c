@@ -769,7 +769,7 @@ CURLcode Curl_setopt(struct Curl_easy *data, CURLoption option,
      * Verbose means infof() calls that give a lot of information about
      * the connection and transfer procedures as well as internal choices.
      */
-    data->set.verbose = (0 != va_arg(param, long)) ? TRUE : FALSE;
+    data->set.verbose = va_arg(param, long);
     break;
   case CURLOPT_HEADER:
     /*

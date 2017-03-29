@@ -1701,7 +1701,7 @@ struct UserDefined {
   bool upload;           /* upload request */
   enum CURL_NETRC_OPTION
        use_netrc;        /* defined in include/curl.h */
-  bool verbose;          /* output verbosity */
+  long verbose;          /* output verbosity */
   bool krb;              /* Kerberos connection requested */
   bool reuse_forbid;     /* forbidden to be reused, close after use */
   bool reuse_fresh;      /* do not re-use an existing connection  */

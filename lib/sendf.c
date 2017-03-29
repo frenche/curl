@@ -799,6 +799,10 @@ static int showit(struct Curl_easy *data, curl_infotype type,
                                data->set.debugdata);
 
   switch(type) {
+  case CURLINFO_DATA_OUT:
+  case CURLINFO_SSL_DATA_OUT:
+    if (data->set.verbose < 2)
+      break;
   case CURLINFO_TEXT:
   case CURLINFO_HEADER_OUT:
   case CURLINFO_HEADER_IN:
