@@ -187,6 +187,8 @@
 #ifdef HAVE_GSSAPI
 # ifdef HAVE_GSSGNU
 #  include <gss.h>
+# elif defined HAVE_STUB_GSSAPI
+#  include "stub_gssapi.h"
 # elif defined HAVE_GSSMIT
 #  include <gssapi/gssapi.h>
 #  include <gssapi/gssapi_generic.h>

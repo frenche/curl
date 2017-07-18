@@ -1336,6 +1336,25 @@ else
   CPPFLAGS="$save_CPPFLAGS"
 fi
 
+want_stub_gss="no"
+AC_ARG_WITH(stub-gssapi,
+  AC_HELP_STRING([--with-stub-gssapi],
+                 [Build using a stub gssapi implementation for testing]),
+    [ want_stub_gss="yes" ]
+)
+
+if test x"$want_stub_gss" = xyes; then
+  if test x"$want_gss" = xyes; then
+    AC_MSG_WARN([Building with gss-api suppprt AND using stub-gss])
+  fi
+  AC_DEFINE(HAVE_GSSAPI, 1, [if you have GSS-API libraries - stub-gss])
+  HAVE_GSSAPI=1
+  curl_gss_msg="enabled with stub-gssapi"
+  AC_DEFINE(HAVE_STUB_GSSAPI, 1, [if using stub GSS-API implementation])
+fi
+
+AM_CONDITIONAL(BUILD_STUB_GSS, test "x$want_stub_gss" = "xyes")
+
 dnl -------------------------------------------------
 dnl check winssl option before other SSL libraries
 dnl -------------------------------------------------
